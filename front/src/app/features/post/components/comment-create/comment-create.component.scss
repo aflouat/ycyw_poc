@@ -1,0 +1,21 @@
+.new-comment-container {
+    display: flex;
+    justify-content: center; /* Centre horizontalement si nécessaire */
+    width: 100%;
+  }
+  
+  .new-comment-form {
+    display: flex;
+    align-items: center; /* Aligner verticalement les éléments */
+    width: 100%; /* Prend toute la largeur */
+  }
+  
+  .new-comment-input {
+    flex: 1; /* Permet au champ de texte de s'étendre */
+    margin-right: 10px; /* Espacement entre le champ et le bouton */
+  }
+  
+  .new-comment-button {
+    flex-shrink: 0; /* Le bouton conserve sa taille fixe */
+  }
+  
