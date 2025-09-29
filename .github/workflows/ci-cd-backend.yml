@@ -47,6 +47,10 @@ jobs:
         run: |
           cd back
           ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar
+           -Dsonar.host.url=https://sonarcloud.io
+           -Dsonar.organization=aflouat
+           -Dsonar.projectKey=aflouat_ywyc-poc-v1
+           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
