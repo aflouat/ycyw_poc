@@ -30,7 +30,7 @@ jobs:
         run: |
           cd back
           ./mvnw clean verify
-            - name: Prepare mvnw
+      - name: Prepare mvnw
         run: |
           chmod +x back/mvnw || true
       # publish code coverage to GITHUB with artifact
