@@ -44,7 +44,7 @@ jobs:
         with:
           projectBaseDir: front
           args: >
-            -Dsonar.projectKey=aflouat-ycywapp-front
+            -Dsonar.projectKey=aflouat_ywyc-poc-front
             -Dsonar.organization=aflouat
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.sources=src
