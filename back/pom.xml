@@ -37,7 +37,8 @@
 		<moquito.version>5.14.2</moquito.version>
 		<maven.compiler.source>22</maven.compiler.source>
 		<maven.compiler.target>22</maven.compiler.target>
-
+ 			<sonar.organization>aflouat</sonar.organization>
+	 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
