@@ -1,15 +1,16 @@
 name: CI/CD frontend
 
-
 on:
   push:
     branches: [ "main" ]
     paths:
       - 'front/**'
+      - '.github/workflows/ci-cd-frontend.yml'
   pull_request:
     branches: [ "main" ]
     paths:
     - 'front/**'
+    - '.github/workflows/ci-cd-frontend.yml'
 
 jobs:
 
