@@ -44,9 +44,11 @@ jobs:
             path: back/target/site/jacoco/
 
       - name: SonarQube Scan - Backend
-        run: |
-          cd back
-          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar
+        working-directory: back
+        run: >
+          
+          ./mvnw -B -ntp
+          org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar
            -Dsonar.host.url=https://sonarcloud.io
            -Dsonar.organization=aflouat
            -Dsonar.projectKey=aflouat_ywyc-poc-v1
