@@ -28,13 +28,14 @@ jobs:
         with:
           distribution: temurin
           java-version: '22'
+      - name: Prepare mvnw
+        run: |
+          chmod +x back/mvnw || true
       - name: Build & test Spring Boot
         run: |
           cd back
           ./mvnw clean verify
-      - name: Prepare mvnw
-        run: |
-          chmod +x back/mvnw || true
+
       # publish code coverage to GITHUB with artifact
       - name: Upload code coverage to GitHub
         uses: actions/upload-artifact@v4
