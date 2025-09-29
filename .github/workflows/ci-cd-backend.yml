@@ -45,7 +45,7 @@ jobs:
 
       - name: SonarQube Scan - Backend
         working-directory: back
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=aflouat_ywyc-poc-v1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=aflouat_ywyc-poc-back -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
