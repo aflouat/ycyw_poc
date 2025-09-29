@@ -40,7 +40,6 @@ jobs:
             name: code-coverage-back
             path: back/target/site/jacoco/
 
-
       - name: SonarQube Scan - Backend
         run: |
           cd back
