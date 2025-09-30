@@ -50,11 +50,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = jwtUtils.extractTokenFromRequest(request);
         String identifier = null;
-        logger.debug("token vide : " + token.isEmpty());
+        logger.debug("token empty: {}", (token == null || token.isEmpty()));
 
-        if (token==null || token.isEmpty()){
+        if (token == null || token.isEmpty()){
             throw new BadCredentialsException("Token is empty");
-        }else{
+        } else {
             identifier = jwtServiceImpl.extractIdentifier(token);
 
         }
@@ -82,7 +82,8 @@ public class JwtFilter extends OncePerRequestFilter {
      * @throws ServletException
      */
     public boolean dontNeedAuthorisation(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String path) throws IOException, ServletException {
-        if (path.equals("/api/v1/auth/login") || path.equals("/api/v1/auth/register")
+        if (path.equals("/api/v1/auth/login") || path.equals("/api/auth/login")
+                || path.equals("/api/v1/auth/register")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger-resources")
