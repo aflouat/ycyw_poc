@@ -9,7 +9,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from '../../app-routing.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { TopicModule } from '../topic/topic.module';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
@@ -28,8 +27,8 @@ import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
     ProfileComponent
   ],
   imports: [
-    ReactiveFormsModule,CommonModule,AuthRoutingModule,TopicModule,
-SharedModule  ],
+    ReactiveFormsModule, CommonModule, AuthRoutingModule,
+    SharedModule],
 })
 export class AuthModule { }
 
@@ -53,12 +52,12 @@ export function passwordValidator(control: AbstractControl): ValidationErrors | 
   return isValid
     ? null
     : {
-        passwordStrength: {
-          hasMinLength,
-          hasUpperCase,
-          hasLowerCase,
-          hasNumber,
-          hasSpecialChar,
-        },
-      };
+      passwordStrength: {
+        hasMinLength,
+        hasUpperCase,
+        hasLowerCase,
+        hasNumber,
+        hasSpecialChar,
+      },
+    };
 }

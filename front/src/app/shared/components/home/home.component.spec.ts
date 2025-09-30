@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
+import { SharedModule } from '../../shared.module';
+import { CommonModule } from '@angular/common';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -8,9 +10,10 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeComponent]
+      declarations: [HomeComponent],
+      imports: [CommonModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;

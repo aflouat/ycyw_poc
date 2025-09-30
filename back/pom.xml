@@ -32,11 +32,11 @@
 		<url>https://github.com/aflouat/ywyc-poc-v1.git</url>
 	</scm>
 	<properties>
-		<java.version>22</java.version>
+		<java.version>21</java.version>
 		<dep.junit.version>5.11.3</dep.junit.version>
 		<moquito.version>5.14.2</moquito.version>
-		<maven.compiler.source>22</maven.compiler.source>
-		<maven.compiler.target>22</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
  			<sonar.organization>aflouat</sonar.organization>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
