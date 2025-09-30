@@ -4,7 +4,31 @@ import { Router } from '@angular/router';
 import { RegisterRequest } from '../../interfaces/register-request.interface';
 import { AuthService } from '../../services/auth.service';
 import { SessionService } from '../../../../shared/services/session.service';
-import { passwordValidator } from '../../auth.module';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+function passwordValidator(control: AbstractControl): ValidationErrors | null {
+  const password = control.value;
+  if (!password) {
+    return { required: true };
+  }
+  const hasMinLength = password.length >= 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[\W_]/.test(password);
+  const isValid = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+  return isValid
+    ? null
+    : {
+        passwordStrength: {
+          hasMinLength,
+          hasUpperCase,
+          hasLowerCase,
+          hasNumber,
+          hasSpecialChar,
+        },
+      };
+}
 
 @Component({
   selector: 'app-register',

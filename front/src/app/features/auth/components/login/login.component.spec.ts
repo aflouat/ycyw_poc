@@ -9,8 +9,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatIcon } from '@angular/material/icon';
-import { MatFormField } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -51,8 +54,11 @@ describe('LoginComponent', () => {
       imports: [
         ReactiveFormsModule,         // ✅ nécessaire pour FormBuilder/FormGroup
         RouterTestingModule, // ✅ fournit un Router de test
-        MatIcon,
-        MatFormField
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        NoopAnimationsModule
       ],
       providers: [
         { provide: AuthService, useClass: AuthServiceMock },
@@ -68,5 +74,89 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+});
+
+
+// Additional tests to increase coverage
+
+describe('LoginComponent additional', () => {
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [LoginComponent],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        NoopAnimationsModule
+      ],
+      providers: [
+        { provide: AuthService, useClass: AuthServiceMock },
+        { provide: SessionService, useClass: SessionServiceMock },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(LoginComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should call SessionService.logIn and navigate on success', () => {
+    const sessionMock = TestBed.inject(SessionService) as unknown as SessionServiceMock;
+    const auth = TestBed.inject(AuthService) as unknown as AuthServiceMock;
+    const router = TestBed.inject(Router);
+    const navSpy = spyOn(router, 'navigate');
+
+    component.form.setValue({ identifier: 'john', password: '123456' });
+    component.onSubmit();
+
+    auth.emitSuccess({ username: 'john', email: 'john@example.com', token: 't' } as any);
+
+    expect(sessionMock.logIn).toHaveBeenCalled();
+    expect(navSpy).toHaveBeenCalledWith(['auth', 'profile']);
+  });
+});
+
+
+// Extra tests for coverage
+
+describe('LoginComponent navigation helpers', () => {
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [LoginComponent],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        NoopAnimationsModule
+      ],
+      providers: [
+        { provide: AuthService, useClass: AuthServiceMock },
+        { provide: SessionService, useClass: SessionServiceMock },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(LoginComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('goBack should navigate to root', () => {
+    const router = TestBed.inject(Router);
+    const spy = spyOn(router, 'navigate');
+    component.goBack();
+    expect(spy).toHaveBeenCalledWith(['/']);
   });
 });
