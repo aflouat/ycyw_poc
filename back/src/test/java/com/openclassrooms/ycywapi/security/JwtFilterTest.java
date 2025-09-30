@@ -71,17 +71,15 @@ public class JwtFilterTest {
     }
 
     @Test
-    void doFilterInternal_shouldThrow_whenTokenMissing() throws Exception {
+    void doFilterInternal_shouldPassThrough_whenTokenMissing() throws Exception {
         when(request.getServletPath()).thenReturn("/api/anything");
         when(jwtUtils.extractTokenFromRequest(request)).thenReturn("");
 
-        try {
-            jwtFilter.doFilterInternal(request, response, filterChain);
-            fail("Expected BadCredentialsException");
-        } catch (BadCredentialsException ex) {
-            // expected
-        }
-        verify(filterChain, never()).doFilter(any(), any());
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        // Should pass through without setting authentication
+        verify(filterChain, times(1)).doFilter(request, response);
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
     @Test

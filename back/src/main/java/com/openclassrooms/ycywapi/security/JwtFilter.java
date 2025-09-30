@@ -53,7 +53,9 @@ public class JwtFilter extends OncePerRequestFilter {
         logger.debug("token empty: {}", (token == null || token.isEmpty()));
 
         if (token == null || token.isEmpty()){
-            throw new BadCredentialsException("Token is empty");
+            // No token provided: skip authentication and continue the chain.
+            filterChain.doFilter(request, response);
+            return;
         } else {
             identifier = jwtServiceImpl.extractIdentifier(token);
 
