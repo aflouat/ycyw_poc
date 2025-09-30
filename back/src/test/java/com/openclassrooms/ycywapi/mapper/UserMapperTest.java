@@ -2,29 +2,61 @@ package com.openclassrooms.ycywapi.mapper;
 
 import com.openclassrooms.ycywapi.dto.UserDto;
 import com.openclassrooms.ycywapi.models.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class UserMapperTest {
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
-
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     private User user;
-    private UserDto userDto;
+    private UserDto dto;
 
     @BeforeEach
-    public void setUp() {
-        user = User.builder().id(1L).email("test@gmail.com").username("Joseph").password("pwd").build();
-        userDto = UserDto.builder().email("test@gmail.com").username("Joseph").build();
+    void setUp() {
+        LocalDateTime now = LocalDateTime.now();
+        user = User.builder()
+                .id(1L)
+                .email("john.doe@test.com")
+                .username("johndoe")
+                .password("pwd")
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
 
+        dto = UserDto.builder()
+                .email("john.doe@test.com")
+                .username("johndoe")
+                .password("pwd")
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
     }
+
     @Test
-    public void givenUser_whenMapUserDto_thenReturnUserDto() {
-        Assertions.assertEquals(userDto.getEmail(),user.getEmail());
+    void toDto_shouldMapBasicFields() {
+        UserDto mapped = mapper.toDto(user);
+        assertNotNull(mapped);
+        assertEquals(user.getEmail(), mapped.getEmail());
+        assertEquals(user.getUsername(), mapped.getUsername());
+        // password has @JsonIgnore in DTO but mapper still copies the field
+        assertEquals(user.getPassword(), mapped.getPassword());
+        assertEquals(user.getCreatedAt(), mapped.getCreatedAt());
+        assertEquals(user.getUpdatedAt(), mapped.getUpdatedAt());
+    }
+
+    @Test
+    void toEntity_shouldMapBasicFields() {
+        User mapped = mapper.toEntity(dto);
+        assertNotNull(mapped);
+        assertEquals(dto.getEmail(), mapped.getEmail());
+        assertEquals(dto.getUsername(), mapped.getUsername());
+        assertEquals(dto.getPassword(), mapped.getPassword());
+        assertEquals(dto.getCreatedAt(), mapped.getCreatedAt());
+        assertEquals(dto.getUpdatedAt(), mapped.getUpdatedAt());
     }
 }

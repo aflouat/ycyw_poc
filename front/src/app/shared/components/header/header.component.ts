@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { SessionService } from '../../services/session.service';
 import { Subscription } from 'rxjs';
 import { IntercomService } from '../../services/intercom.service';
@@ -9,7 +9,7 @@ import { IntercomService } from '../../services/intercom.service';
   styleUrl: './header.component.scss',
   standalone: false
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewInit {
   showRightMenu: boolean = false;
   private subscription: Subscription = new Subscription();
   isMobile: boolean = false;

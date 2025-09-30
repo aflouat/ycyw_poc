@@ -1,8 +1,8 @@
 package com.openclassrooms.ycywapi.security;
 
+import com.openclassrooms.ycywapi.models.UserPrincipal;
 import com.openclassrooms.ycywapi.services.impl.JwtServiceImpl;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,69 +14,110 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class JwtFilterTest {
+public class JwtFilterTest {
 
     @Mock
     private JwtServiceImpl jwtServiceImpl;
+
     @Mock
-    private ApplicationContext context;
+    private ApplicationContext applicationContext;
+
     @Mock
     private JwtUtils jwtUtils;
-    @Mock
-    HttpServletRequest request;
-    @Mock
-    HttpServletResponse response;
-    @Mock
-    ServletContext servletContext;
 
-    private String token ="token";
     @InjectMocks
-    JwtFilter jwtFilter;
-
+    private JwtFilter jwtFilter;
 
     @Mock
-    FilterChain chain;
+    private HttpServletRequest request;
+    @Mock
+    private HttpServletResponse response;
+    @Mock
+    private FilterChain filterChain;
 
+    @Mock
+    private UserDetailsService userDetailsService;
 
     @BeforeEach
     void setUp() {
+        SecurityContextHolder.clearContext();
     }
 
     @AfterEach
     void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     @Test
-    void doFilterInternal() {
+    void doFilterInternal_shouldBypass_forAuthLogin() throws ServletException, IOException {
+        when(request.getServletPath()).thenReturn("/api/auth/login");
+
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        verify(filterChain, times(1)).doFilter(request, response);
+        // No authentication set
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
     @Test
-    void dontNeedAuthorisation_login() throws ServletException, IOException {
-        String path = "/api/auth/login";
-        when(request.getServletPath()).thenReturn(path);
-        jwtFilter.doFilterInternal(request, response, chain);
-        verify(chain,times(1)).doFilter(request,
-                response);
+    void doFilterInternal_shouldThrow_whenTokenMissing() throws Exception {
+        when(request.getServletPath()).thenReturn("/api/anything");
+        when(jwtUtils.extractTokenFromRequest(request)).thenReturn("");
+
+        try {
+            jwtFilter.doFilterInternal(request, response, filterChain);
+            fail("Expected BadCredentialsException");
+        } catch (BadCredentialsException ex) {
+            // expected
+        }
+        verify(filterChain, never()).doFilter(any(), any());
     }
 
     @Test
-    void dontNeedAuthorisation_register() throws ServletException, IOException {
-        String path = "/api/auth/register";
-        when(request.getServletPath()).thenReturn(path);
-        jwtFilter.doFilterInternal(request, response, chain);
-        verify(chain,times(1)).doFilter(request,
-                response);
+    void doFilterInternal_shouldAuthenticate_whenValidToken() throws ServletException, IOException {
+        when(request.getServletPath()).thenReturn("/api/secured");
+        when(jwtUtils.extractTokenFromRequest(request)).thenReturn("token-123");
+        when(jwtServiceImpl.extractIdentifier("token-123")).thenReturn("alice");
+        when(jwtServiceImpl.hasTokenNotExpired("token-123")).thenReturn(true);
+
+        UserPrincipal principal = UserPrincipal.builder()
+                .id(1L)
+                .username("alice")
+                .email("alice@test.com")
+                .password("pwd")
+                .build();
+
+        when(applicationContext.getBean(UserDetailsService.class)).thenReturn(userDetailsService);
+        when(userDetailsService.loadUserByUsername("alice")).thenReturn(principal);
+
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        assertNotNull(SecurityContextHolder.getContext().getAuthentication());
+        assertEquals(principal, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        verify(filterChain, times(1)).doFilter(request, response);
     }
 
-
-
     @Test
-    void validateToken() {
+    void validateToken_shouldThrow_whenExpired() {
+        when(jwtServiceImpl.hasTokenNotExpired("expired")).thenReturn(false);
+        UserPrincipal principal = UserPrincipal.builder()
+                .id(2L)
+                .username("bob")
+                .email("bob@test.com")
+                .password("pwd")
+                .build();
+        assertThrows(io.jsonwebtoken.ExpiredJwtException.class, () ->
+                jwtFilter.validateToken(request, "expired", principal));
     }
 }

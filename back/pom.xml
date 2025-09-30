@@ -226,7 +226,7 @@
 						<exclude>**/dto/**</exclude>
 						<exclude>**/payload/**</exclude>
 						<exclude>**/models/**</exclude>
-
+						<exclude>**/exception/**</exclude>
 
 
 						<!-- Exclut les classes anonymes et internes générées -->

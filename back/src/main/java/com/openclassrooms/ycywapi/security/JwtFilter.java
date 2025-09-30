@@ -82,8 +82,13 @@ public class JwtFilter extends OncePerRequestFilter {
      * @throws ServletException
      */
     public boolean dontNeedAuthorisation(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String path) throws IOException, ServletException {
-        if (path.equals("/api/auth/login") || path.equals("/api/auth/register")) {
-            logger.debug("Filter : register called");
+        if (path.equals("/api/auth/login") || path.equals("/api/auth/register")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")
+                || path.startsWith("/error")) {
+            logger.debug("Filter bypassed for path: {}", path);
             filterChain.doFilter(request, response);
             return true;
         }

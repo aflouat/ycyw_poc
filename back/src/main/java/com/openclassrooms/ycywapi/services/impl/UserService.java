@@ -75,6 +75,7 @@ public class UserService implements IUserService {
                 .id(userPrincipal.getId())
                 .email(connectedUserEmail)
                 .username(userPrincipal.getUsername())
+                .type("Bearer")
                 .token(jwt)
                 .intercomJwt(intercomJwt)
                 .intercomUserHash(intercomUserHash)

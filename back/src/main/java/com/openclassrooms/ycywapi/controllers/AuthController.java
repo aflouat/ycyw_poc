@@ -5,6 +5,11 @@ import com.openclassrooms.ycywapi.payload.request.SignupRequest;
 import com.openclassrooms.ycywapi.payload.request.UserCredentialUpdateRequest;
 import com.openclassrooms.ycywapi.payload.response.JwtResponse;
 import com.openclassrooms.ycywapi.services.interfaces.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,6 +31,16 @@ public class AuthController {
         jwtResponse = userService.authenticate(loginRequest);
         return ResponseEntity.ok(jwtResponse);
     }
+
+    @Operation(summary = "register a user")
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User registered",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JwtResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "cannot register this user!",
+                    content = @Content)
+    })
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {

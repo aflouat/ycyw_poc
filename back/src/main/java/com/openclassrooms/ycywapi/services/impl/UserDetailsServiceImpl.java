@@ -4,6 +4,7 @@ import com.openclassrooms.ycywapi.models.User;
 import com.openclassrooms.ycywapi.models.UserPrincipal;
 import com.openclassrooms.ycywapi.repositories.UserRepository;
 import com.openclassrooms.ycywapi.services.interfaces.IUserDetailsService;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
