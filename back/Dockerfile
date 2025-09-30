@@ -1,4 +1,4 @@
-FROM maven:3.8.7-eclipse-temurin-19 AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 RUN mkdir -p /workspace
 WORKDIR /workspace
 COPY pom.xml /workspace

@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:3001"));
+                    config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:3000"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 }))
                 .csrf(customizer -> customizer.disable()).
                 authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth/login", "/api/auth/register", "/swagger-ui/**",
+                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/swagger-ui/**",
                                 "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html",
                                 "/webjars/**", "/error").
                         permitAll().anyRequest().authenticated()).
